@@ -7,5 +7,6 @@ node {
     git 'https://github.com/bijukunjummen/sample-spring-cloud-svc-ci'
 
     stage 'Compile, Test and Package'
+    // Test modification..
     sh './gradlew clean build'
 }
