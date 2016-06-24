@@ -5,3 +5,7 @@ server:
 
 reply:
   message: Hello!
+
+security:
+  basic:
+    enabled: false
