@@ -1,14 +1,13 @@
 == Running Locally
 
 * Start up the Service using the following command
+
 [source,java]
 ----
-mvn spring-boot:run
+./gradlew bootRun
 ----
 
 * A very basic UI to exercise the API is available at http://localhost:8080
-
-
 
 == Jenkins Pre-requisites
 
@@ -32,6 +31,7 @@ the console
  - Install the Pipeline Jenkins Plugin, "Jobs DSL Plugin" along with the other recommended plugins
 
  - Download Jenkins CLI from the Jenkins server:
+
  [source]
  ----
  wget http://dockerip:8080/jnlpJars/jenkins-cli.jar
