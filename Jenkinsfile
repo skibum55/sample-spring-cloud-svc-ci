@@ -5,7 +5,7 @@ def flow
 node {
     stage 'clone project'
     echo "Cloning Project"
-    git([url: 'https://github.com/${user}/sample-spring-cloud-svc-ci.git', branch: 'Jenkinsfile'])
+    git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'Jenkinsfile'])
     flow = load 'ci/pipeline.groovy'
     flow.runCleanBuild(user)
 }
