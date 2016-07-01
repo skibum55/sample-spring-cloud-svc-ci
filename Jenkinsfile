@@ -27,5 +27,5 @@ node("cd") {
 checkpoint "deploy to prod"
 node("cd") {
     flow = load 'ci/pipeline.groovy'
-    flow.push_to_dev('prod', 'api.run.pez.pivotal.io', 'bkunjummen+jenkins@pivotal.io', 'jenkins', 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
+    flow.push('prod', 'api.run.pez.pivotal.io', 'bkunjummen+jenkins@pivotal.io', 'jenkins', 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
 }
