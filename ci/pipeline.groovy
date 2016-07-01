@@ -1,7 +1,6 @@
 echo "Starting workflow"
 
-def runCleanBuild(project)
-node {
+def runCleanBuild(project) {
     stage 'clone project'
 
     echo "Cloning Project"
