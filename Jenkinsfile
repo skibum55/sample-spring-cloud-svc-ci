@@ -1,10 +1,10 @@
-def serviceName = "sample-spring-cloud-svc-ci"
+def user = "malston"
 // def registry = "localhost:5000"
 def flow
 
 node {
     flow = load 'ci/pipeline.groovy'
-    flow.runCleanBuild("https://github.com/malston/${serviceName}.git")
+    flow.runCleanBuild(user)
 }
 // checkpoint "deploy"
 // node("cd") {
