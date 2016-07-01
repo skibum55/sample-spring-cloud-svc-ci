@@ -1,10 +1,11 @@
 echo "Starting workflow"
 
+def runCleanBuild(project)
 node {
     stage 'clone project'
 
     echo "Cloning Project"
-    git 'https://github.com/bijukunjummen/sample-spring-cloud-svc-ci'
+    git ${project}
 
     stage 'Compile, Test and Package'
     // Test modification..
