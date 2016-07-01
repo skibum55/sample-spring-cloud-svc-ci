@@ -4,7 +4,7 @@ def flow
 
 node("cd") {
     git "https://github.com/malston/${serviceName}.git"
-    flow = load script(readFileFromWorkspace('ci/pipeline.groovy'))
+    flow = load 'ci/pipeline.groovy'
     flow.runCleanBuild(git)
 }
 // checkpoint "deploy"
