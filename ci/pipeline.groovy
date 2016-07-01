@@ -1,5 +1,3 @@
-echo "Starting workflow"
-
 def runCleanBuild(project) {
     stage 'clone project'
 
@@ -10,3 +8,5 @@ def runCleanBuild(project) {
     // Test modification..
     sh './gradlew clean build'
 }
+
+return this;
