@@ -7,10 +7,25 @@ node {
     echo "Cloning Project"
     git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'Jenkinsfile'])
     flow = load 'ci/pipeline.groovy'
-    flow.runCleanBuild(user)
+    flow.build()
 }
-// checkpoint "deploy"
-// node("cd") {
-//     flow.deploy(serviceName, registry)
-//     flow.runPostDeploymentTests(serviceName, registry, "http://[IP]:8081")
-// }
+checkpoint "test"
+node {
+    flow = load 'ci/pipeline.groovy'
+    flow.clean_test()
+}
+checkpoint "deploy to dev"
+node {
+    flow = load 'ci/pipeline.groovy'
+    flow.push_to_dev('api.run.pez.pivotal.io', 'bkunjummen+jenkins@pivotal.io', 'jenkins', 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+}
+checkpoint "deploy to test"
+node {
+    flow = load 'ci/pipeline.groovy'
+    flow.push_to_dev('api.run.pez.pivotal.io', 'bkunjummen+jenkins@pivotal.io', 'jenkins', 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
+}
+checkpoint "deploy to prod"
+node {
+    flow = load 'ci/pipeline.groovy'
+    flow.push_to_dev('api.run.pez.pivotal.io', 'bkunjummen+jenkins@pivotal.io', 'jenkins', 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
+}
