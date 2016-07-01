@@ -3,9 +3,8 @@ def serviceName = "sample-spring-cloud-svc-ci"
 def flow
 
 node {
-    git "https://github.com/malston/${serviceName}.git"
     flow = load 'ci/pipeline.groovy'
-    flow.runCleanBuild(git)
+    flow.runCleanBuild("https://github.com/malston/${serviceName}.git")
 }
 // checkpoint "deploy"
 // node("cd") {
