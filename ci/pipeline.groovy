@@ -4,7 +4,7 @@ def runCleanBuild(user) {
     stage 'clone project'
 
     echo "Cloning Project"
-    git "https://github.com/${user}/sample-spring-cloud-svc-ci.git"
+    git([url: 'https://github.com/${user}/sample-spring-cloud-svc-ci.git', branch: 'Jenkinsfile'])
 
     stage 'Compile, Test and Package'
     maven.inside {
