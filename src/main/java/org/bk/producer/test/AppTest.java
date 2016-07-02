@@ -29,7 +29,7 @@ public class AppTest extends Assert {
     public void testApp(int duration) throws Exception {
         URL app = getSUT();
         String contents = IOUtils.toString(app.openStream());
-        assertTrue(contents.contains("Hello Jenkins!"));
+        assertTrue(contents.contains("Hello!"));
 
         // this is supposed to be an integration test,
         // let's take some time. We want this to be longer than the build for sure.
