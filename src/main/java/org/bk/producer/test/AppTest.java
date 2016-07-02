@@ -1,11 +1,11 @@
 package org.bk.producer.test;
 
-import org.apache.commons.io.IOUtils;
+import java.net.URI;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import java.net.URL;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Integration test for webapp.
@@ -27,8 +27,10 @@ public class AppTest extends Assert {
 
 
     public void testApp(int duration) throws Exception {
-        URL app = getSUT();
-        String contents = IOUtils.toString(app.openStream());
+        URI app = getSUT();
+        RestTemplate restTemplate = new RestTemplate();
+        String contents = restTemplate.postForObject(app, "test", String.class);
+        
         assertTrue(contents.contains("Hello!"));
 
         // this is supposed to be an integration test,
@@ -36,9 +38,9 @@ public class AppTest extends Assert {
         Thread.sleep(duration);
     }
 
-    private URL getSUT() throws Exception {
+    private URI getSUT() throws Exception {
         String url = System.getProperty("url");
         assertTrue("Subject under test should be passed in via -Durl=...", url!=null);
-        return new URL(url);
+        return new URI(url);
     }
 }
