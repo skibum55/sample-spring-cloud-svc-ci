@@ -1,6 +1,6 @@
 def user = "malston"
-def cfUser = ${cf_username}
-def cfPassword = ${cf_password}
+def cfUser = "${cf_username}"
+def cfPassword = "${cf_password}"
 // def registry = "localhost:5000"
 def flow
 
