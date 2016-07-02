@@ -31,13 +31,13 @@ parallel(
     smokeTests: {
         node {
             checkout scm
-            mvn "test -P smoke -Durl=http://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/test"
+            mvn "test -P smoke -Durl=http://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message"
         }
     },
     acceptanceTests: {
         node {
             checkout scm
-            mvn "test -P acceptance -Durl=http://sample-spring-cloud-svc-ci-test.cfapps.pez.pivotal.io/test"
+            mvn "test -P acceptance -Durl=http://sample-spring-cloud-svc-ci-test.cfapps.pez.pivotal.io/message"
         }
     }
 )
