@@ -29,13 +29,11 @@ def pushIf(api, user, password, org, space, domain, hostname) {
 
 def runSmokeTests(url, user) {
 	stage 'run smoke tests'
-	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'Jenkinsfile'])
 	sh "./mvnw test -P smoke -Durl=${url}"
 }
 
 def runAcceptanceTests(url, user) {
 	stage 'run acceptance tests'
-	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'Jenkinsfile'])
 	sh "./mvnw test -P acceptance -Durl=${url}"
 }
 
