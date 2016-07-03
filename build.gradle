@@ -50,6 +50,11 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
+test {
+	filter {
+		includeTestsMatching "*Test"
+	}
+}
 
 dependencies {
 //	compile('io.pivotal.spring.cloud:spring-cloud-services-starter-circuit-breaker')

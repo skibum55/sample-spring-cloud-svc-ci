@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Integration test for webapp.
  */
-public class AppTest extends Assert {
+public class AppTests extends Assert {
 
 
     @Test
