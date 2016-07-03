@@ -39,7 +39,7 @@ parallel(
 checkpoint "deploy to test"
 node("cd") {
 	flow = load 'ci/pipeline.groovy'
-	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
+	flow.pushIf('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 }
 checkpoint "run tests on test"
 parallel(

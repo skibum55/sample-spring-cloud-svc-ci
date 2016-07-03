@@ -5,6 +5,10 @@ import java.net.URI;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -25,13 +29,16 @@ public class AppTest extends Assert {
         testApp(60*1000);
     }
 
-
     public void testApp(int duration) throws Exception {
         URI app = getSUT();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<String>("{\"message\": {\"payload\": \"test\"}}",headers);
         RestTemplate restTemplate = new RestTemplate();
-        String contents = restTemplate.postForObject(app, "test", String.class);
+        ResponseEntity<String> contents = restTemplate.postForEntity(app, entity, String.class);
         
-        assertTrue(contents.contains("Hello!"));
+        assertTrue(contents.getBody().contains("Hello!"));
 
         // this is supposed to be an integration test,
         // let's take some time. We want this to be longer than the build for sure.
