@@ -16,35 +16,43 @@ node("cd") {
 	flow = load 'ci/pipeline.groovy'
 	flow.clean_test()
 }
-checkpoint "deploy to cf"
-//parallel(
-//	deployToDev: {
-		node {
-			flow = load 'ci/pipeline.groovy'
-			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
-		}
-//	},
-//	deployToTest: {
-		node {
-			flow = load 'ci/pipeline.groovy'
-			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
-		}
-//	}
-//)
-checkpoint "run acceptance & smoke tests"
+checkpoint "deploy to development"
+node {
+	flow = load 'ci/pipeline.groovy'
+	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+}
+checkpoint "run tests on dev"
 parallel(
 	smokeTests: {
 		node {
-			stage 'run smoke tests'
-			checkout scm
-			mvn "test -P smoke -Durl=https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message"
+			flow = load 'ci/pipeline.groovy'
+			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	},
 	acceptanceTests: {
 		node {
-			stage 'run acceptance tests'
-			checkout scm
-			mvn "test -P acceptance -Durl=https://sample-spring-cloud-svc-ci-test.cfapps.pez.pivotal.io/message"
+			flow = load 'ci/pipeline.groovy'
+			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+		}
+	}
+)
+checkpoint "deploy to test"
+node {
+	flow = load 'ci/pipeline.groovy'
+	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
+}
+checkpoint "run tests on test"
+parallel(
+	smokeTests: {
+		node {
+			flow = load 'ci/pipeline.groovy'
+			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+		}
+	},
+	acceptanceTests: {
+		node {
+			flow = load 'ci/pipeline.groovy'
+			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	}
 )

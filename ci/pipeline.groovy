@@ -22,9 +22,21 @@ def push(api, user, password, org, space, domain, hostname) {
 }
 
 def pushIf(api, user, password, org, space, domain, hostname) {
-    stage "cf push and verify"
+    stage "cf push if acceptable"
     input "Deploy to ${org} ${space}?"
     sh "./gradlew cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
+}
+
+def runSmokeTests(url) {
+	stage 'run smoke tests'
+	checkout scm
+	sh "./mvnw test -P smoke -Durl=${url}"
+}
+
+def runAcceptanceTests(url) {
+	stage 'run acceptance tests'
+	checkout scm
+	sh "./mvnw test -P acceptance -Durl=${url}"
 }
 
 return this;
