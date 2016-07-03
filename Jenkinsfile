@@ -17,7 +17,7 @@ node("cd") {
 	flow.clean_test()
 }
 checkpoint "deploy to cf"
-parallel(
+//parallel(
 	deployToDev: {
 		node {
 			flow = load 'ci/pipeline.groovy'
@@ -30,7 +30,7 @@ parallel(
 			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 		}
 	}
-)
+//)
 checkpoint "run acceptance & smoke tests"
 parallel(
 	smokeTests: {
