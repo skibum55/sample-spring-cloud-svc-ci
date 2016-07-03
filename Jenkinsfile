@@ -26,13 +26,13 @@ parallel(
 	smokeTests: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
 		}
 	},
 	acceptanceTests: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
 		}
 	}
 )
@@ -46,13 +46,13 @@ parallel(
 	smokeTests: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
 		}
 	},
 	acceptanceTests: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
+			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
 		}
 	}
 )
