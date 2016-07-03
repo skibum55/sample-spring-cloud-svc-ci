@@ -15,15 +15,15 @@ def clean_test() {
     // step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
 }
 
-def push(env, api, user, password, org, space, domain, hostname) {
+def push(api, user, password, org, space, domain, hostname) {
     stage 'cf push'
     sh "ls -la"
     sh "./gradlew cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
-def push_and_verify(env, api, user, password, org, space, domain, hostname) {
+def pushIf(api, user, password, org, space, domain, hostname) {
     stage "cf push and verify"
-    input "Deploy to ${env}?"
+    input "Deploy to ${org} ${space}?"
     sh "./gradlew cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 

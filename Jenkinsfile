@@ -21,13 +21,13 @@ parallel(
 	deployToDev: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.push('dev', 'api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 		}
 	},
 	deployToTest: {
 		node("cd") {
 			flow = load 'ci/pipeline.groovy'
-			flow.push('test', 'api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
+			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 		}
 	}
 )
@@ -51,5 +51,5 @@ parallel(
 checkpoint "deploy to prod"
 node("cd") {
 	flow = load 'ci/pipeline.groovy'
-	flow.push_and_verify('prod', 'api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
+	flow.pushIf('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
 }
