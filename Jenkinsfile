@@ -17,47 +17,47 @@ node("cd") {
 	flow.clean_test()
 }
 checkpoint "deploy to development"
-node {
+node("cd") {
 	flow = load 'ci/pipeline.groovy'
 	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 }
 checkpoint "run tests on dev"
 parallel(
 	smokeTests: {
-		node {
+		node("cd") {
 			flow = load 'ci/pipeline.groovy'
 			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	},
 	acceptanceTests: {
-		node {
+		node("cd") {
 			flow = load 'ci/pipeline.groovy'
 			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	}
 )
 checkpoint "deploy to test"
-node {
+node("cd") {
 	flow = load 'ci/pipeline.groovy'
 	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 }
 checkpoint "run tests on test"
 parallel(
 	smokeTests: {
-		node {
+		node("cd") {
 			flow = load 'ci/pipeline.groovy'
 			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	},
 	acceptanceTests: {
-		node {
+		node("cd") {
 			flow = load 'ci/pipeline.groovy'
 			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message')
 		}
 	}
 )
 checkpoint "deploy to prod"
-node {
+node("cd") {
 	flow = load 'ci/pipeline.groovy'
 	flow.pushIf('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
 }
