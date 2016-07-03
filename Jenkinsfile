@@ -18,18 +18,18 @@ node("cd") {
 }
 checkpoint "deploy to cf"
 //parallel(
-	deployToDev: {
+//	deployToDev: {
 		node {
 			flow = load 'ci/pipeline.groovy'
 			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 		}
-	},
-	deployToTest: {
+//	},
+//	deployToTest: {
 		node {
 			flow = load 'ci/pipeline.groovy'
 			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 		}
-	}
+//	}
 //)
 checkpoint "run acceptance & smoke tests"
 parallel(
@@ -37,14 +37,14 @@ parallel(
 		node {
 			stage 'run smoke tests'
 			checkout scm
-			mvn "test -P smoke -Durl=http://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message"
+			mvn "test -P smoke -Durl=https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message"
 		}
 	},
 	acceptanceTests: {
 		node {
 			stage 'run acceptance tests'
 			checkout scm
-			mvn "test -P acceptance -Durl=http://sample-spring-cloud-svc-ci-test.cfapps.pez.pivotal.io/message"
+			mvn "test -P acceptance -Durl=https://sample-spring-cloud-svc-ci-test.cfapps.pez.pivotal.io/message"
 		}
 	}
 )
