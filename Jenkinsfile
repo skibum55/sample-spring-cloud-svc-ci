@@ -19,13 +19,13 @@ node("cd") {
 checkpoint "deploy to cf"
 parallel(
 	deployToDev: {
-		node("cd") {
+		node {
 			flow = load 'ci/pipeline.groovy'
 			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 		}
 	},
 	deployToTest: {
-		node("cd") {
+		node {
 			flow = load 'ci/pipeline.groovy'
 			flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'test', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-test')
 		}
@@ -49,7 +49,7 @@ parallel(
 	}
 )
 checkpoint "deploy to prod"
-node("cd") {
+node {
 	flow = load 'ci/pipeline.groovy'
 	flow.pushIf('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'prod', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-prod')
 }
