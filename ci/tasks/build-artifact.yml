@@ -1,7 +1,7 @@
 ---
 platform: linux
 
-image: docker:///datianshi/gradle
+image: docker:///java#8
 
 inputs:
   - name: sample-spring-cloud-svc-repo
