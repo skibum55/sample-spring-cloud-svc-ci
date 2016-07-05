@@ -33,7 +33,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: java#8
+          repository: java:8
       platform: linux
       inputs:
         - name: sample-spring-cloud-svc-repo
@@ -54,7 +54,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: java#8
+          repository: java:8
       platform: linux
       inputs:
         - name: sample-spring-cloud-svc-repo
@@ -108,7 +108,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: java#8
+          repository: java:8
       platform: linux
       inputs:
         - name: sample-spring-cloud-svc-repo
