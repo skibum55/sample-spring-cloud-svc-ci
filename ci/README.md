@@ -72,14 +72,22 @@ You'll need to rename this to something that isn't taken and update [pipeline.ym
 
   1. Configure the cloud foundry target environment in [pipeline.yml](pipeline.yml)
 
+    Copy ci/credentials.yml.sample to ci/credentials.yml and configure for your cloud foundry deployment.
+
     Example:
     ```
-    API_ENDPOINT: api.10.65.192.249.xip.io
-    USERNAME: admin
-    PASSWORD: admin
-    ORG: demo
-    SPACE: prod
-    HOST: sample-spring-cloud-svc-prod
+    api-endpoint: api.10.65.192.249.xip.io
+    cf-username: admin
+    cf-password: admin
+    cf-org: demo
+    cf-space-dev: development
+    cf-space-uat: uat
+    cf-space-prod: production
+    cf-space-test: test
+    host-dev: sample-spring-cloud-svc-dev
+    host-uat: sample-spring-cloud-svc-uat
+    host-prod: sample-spring-cloud-svc
+    host-test: sample-spring-cloud-svc-test
     ```
 
   1. Upload the pipeline configure
@@ -87,6 +95,7 @@ You'll need to rename this to something that isn't taken and update [pipeline.ym
     ```
     fly -t demo set-pipeline -p pipeline sample-spring-cloud-svc-ci-pipeline \
       -c ci/pipeline.yml \
+      -l ci/credentials.yml \
       -v "git-private-key=$(cat ~/.ssh/concourse_demo_git)" \
       -v s3-access-key-id={REPLACE_WITH_YOUR_S3_ACCESS_KEY_ID} \
       -v s3-secret-access-key={REPLACE_WITH_YOUR_S3_SECRET_ACCESS_KEY}

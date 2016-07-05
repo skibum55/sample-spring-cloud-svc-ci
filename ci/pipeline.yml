@@ -29,7 +29,17 @@ jobs:
   - get: sample-spring-cloud-svc-repo
     trigger: true
   - task: unit
-    file: sample-spring-cloud-svc-repo/ci/tasks/unit.yml
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: java#8
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/unit.sh"]
 
 - name: build-binary
   serial: true
@@ -40,8 +50,20 @@ jobs:
   - get: version
     params: {bump: patch}
   - task: build-artifact
-    file: sample-spring-cloud-svc-repo/ci/tasks/build-artifact.yml
-    timeout: 5m
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: java#8
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+        - name: version
+      outputs:
+        - name: build
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/build-artifact.sh"]
   - put: sample-spring-cloud-svc-release
     params:
       file: build/sample-spring-cloud-svc-ci-*.jar
@@ -62,18 +84,39 @@ jobs:
       passed: [build-binary]
       trigger: true
   - task: deploy-to-cats
-    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
-    params:
-      API_ENDPOINT: api.10.65.192.249.xip.io
-      USERNAME: admin
-      PASSWORD: admin
-      ORG: test-org
-      SPACE: cats
-      HOST: sample-spring-cloud-svc-cats
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: datianshi/cf-cli
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+        - name: sample-spring-cloud-svc-release
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.sh"]
+      params:
+        API_ENDPOINT: {{api-endpoint}}
+        USERNAME: {{cf-username}}
+        PASSWORD: {{cf-password}}
+        ORG: {{cf-org}}
+        SPACE: {{cf-space-test}}
+        HOST: {{host-test}}
   - task: cats
-    file: sample-spring-cloud-svc-repo/ci/tasks/cats.yml
-    params:
-      MUSIC_URL: http://sample-spring-cloud-svc-cats.10.65.192.249.xip.io
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: java#8
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/cats.sh"]
+      params:
+        URL: http://{{host-test}}
 
 - name: promote-to-uat
   plan:
@@ -85,14 +128,25 @@ jobs:
       passed: [acceptance-tests]
       trigger: true
   - task: deploy-to-uat
-    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
-    params:
-      API_ENDPOINT: api.10.65.192.249.xip.io
-      USERNAME: admin
-      PASSWORD: admin
-      ORG: test-org
-      SPACE: uat
-      HOST: sample-spring-cloud-svc-uat
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: datianshi/cf-cli
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+        - name: sample-spring-cloud-svc-release
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.sh"]
+      params:
+        API_ENDPOINT: {{api-endpoint}}
+        USERNAME: {{cf-username}}
+        PASSWORD: {{cf-password}}
+        ORG: {{cf-org}}
+        SPACE: {{cf-space-uat}}
+        HOST: {{host-uat}}
 
 - name: manual-deploy-to-prod
   serial: true
@@ -103,11 +157,22 @@ jobs:
     - get: sample-spring-cloud-svc-repo
       passed: [promote-to-uat]
   - task: deploy-to-prod
-    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
-    params:
-      API_ENDPOINT: api.10.65.192.249.xip.io
-      USERNAME: admin
-      PASSWORD: admin
-      ORG: test-org
-      SPACE: prod
-      HOST: sample-spring-cloud-svc
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: datianshi/cf-cli
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+        - name: sample-spring-cloud-svc-release
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.sh"]
+      params:
+        API_ENDPOINT: {{api-endpoint}}
+        USERNAME: {{cf-username}}
+        PASSWORD: {{cf-password}}
+        ORG: {{cf-org}}
+        SPACE: {{cf-space-prod}}
+        HOST: {{host-prod}}
