@@ -91,3 +91,9 @@ You'll need to rename this to something that isn't taken and update [pipeline.ym
       -v s3-access-key-id={REPLACE_WITH_YOUR_S3_ACCESS_KEY_ID} \
       -v s3-secret-access-key={REPLACE_WITH_YOUR_S3_SECRET_ACCESS_KEY}
     ```
+
+  1. Unpause the pipeline
+
+    ```
+    fly -t demo unpause-pipeline -p pipeline sample-spring-cloud-svc-ci-pipeline
+    ```
