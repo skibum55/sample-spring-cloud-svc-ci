@@ -19,7 +19,7 @@ resources:
   type: s3
   source:
     bucket: sample-spring-cloud-svc-pipeline-artifacts
-    regexp: sample-spring-cloud-svc-ci-(.*).war
+    regexp: sample-spring-cloud-svc-ci-(.*).jar
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
 
@@ -44,7 +44,7 @@ jobs:
     timeout: 5m
   - put: sample-spring-cloud-svc-release
     params:
-      file: build/sample-spring-cloud-svc-ci-*.war
+      file: build/sample-spring-cloud-svc-ci-*.jar
   - put: sample-spring-cloud-svc-repo
     params:
       repository: sample-spring-cloud-svc-repo
