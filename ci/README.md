@@ -60,7 +60,8 @@ Basically it just runs "gradle test" against the [sample-spring-cloud-svc-repo](
 * Fork this github repo to your own github account, [ generate the key pair and add the public key to github ](https://help.github.com/articles/generating-ssh-keys), and save the private key (~/.ssh/concourse_demo_git)
 to pass to your pipeline configuration below.
 
-* Prepare a S3 bucket named `sample-spring-cloud-svc-pipeline-artifacts`
+* Create an S3 bucket (e.g. `sample-spring-cloud-svc-pipeline-artifacts`)
+You'll need to rename this to something that isn't taken and update [pipeline.yml](pipeline.yml) to use that bucket instead.
 
 * Using `fly`
 
