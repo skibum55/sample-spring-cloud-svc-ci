@@ -1,0 +1,11 @@
+---
+platform: linux
+
+image: docker:///datianshi/gradle
+
+inputs:
+  - name: sample-spring-cloud-svc-repo
+  - name: version
+
+run:
+  path: sample-spring-cloud-svc-repo/ci/tasks/push-tag.sh

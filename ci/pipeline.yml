@@ -1,0 +1,113 @@
+resources:
+- name: sample-spring-cloud-svc-repo
+  type: git
+  source:
+    uri: git@github.com:malston/sample-spring-cloud-svc-ci.git
+    branch: concourse
+    private_key: {{git-private-key}}
+
+- name: version
+  type: semver
+  source:
+    bucket: sample-spring-cloud-svc-pipeline-artifacts
+    key: current-version
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    initial_version: 1.0.0
+
+- name: sample-spring-cloud-svc-release
+  type: s3
+  source:
+    bucket: sample-spring-cloud-svc-pipeline-artifacts
+    regexp: sample-spring-cloud-svc-ci-(.*).war
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+
+jobs:
+- name: unit
+  plan:
+  - get: sample-spring-cloud-svc-repo
+    trigger: true
+  - task: unit
+    file: sample-spring-cloud-svc-repo/ci/tasks/unit.yml
+
+- name: build-binary
+  serial: true
+  plan:
+  - get: sample-spring-cloud-svc-repo
+    passed: [unit]
+    trigger: true
+  - get: version
+    params: {bump: patch}
+  - task: build-artifact
+    file: sample-spring-cloud-svc-repo/ci/tasks/build-artifact.yml
+    timeout: 5m
+  - put: sample-spring-cloud-svc-release
+    params:
+      file: build/sample-spring-cloud-svc-ci-*.war
+  - put: sample-spring-cloud-svc-repo
+    params:
+      repository: sample-spring-cloud-svc-repo
+      tag: version/number
+  - put: version
+    params: {file: version/number}
+
+- name: acceptance-tests
+  plan:
+  - aggregate:
+    - get: sample-spring-cloud-svc-release
+      passed: [build-binary]
+      trigger: true
+    - get: sample-spring-cloud-svc-repo
+      passed: [build-binary]
+      trigger: true
+  - task: deploy-to-cats
+    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
+    params:
+      API_ENDPOINT: api.10.65.192.249.xip.io
+      USERNAME: admin
+      PASSWORD: admin
+      ORG: test-org
+      SPACE: cats
+      HOST: sample-spring-cloud-svc-cats
+  - task: cats
+    file: sample-spring-cloud-svc-repo/ci/tasks/cats.yml
+    params:
+      MUSIC_URL: http://sample-spring-cloud-svc-cats.10.65.192.249.xip.io
+
+- name: promote-to-uat
+  plan:
+  - aggregate:
+    - get: sample-spring-cloud-svc-release
+      passed: [acceptance-tests]
+      trigger: true
+    - get: sample-spring-cloud-svc-repo
+      passed: [acceptance-tests]
+      trigger: true
+  - task: deploy-to-uat
+    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
+    params:
+      API_ENDPOINT: api.10.65.192.249.xip.io
+      USERNAME: admin
+      PASSWORD: admin
+      ORG: test-org
+      SPACE: uat
+      HOST: sample-spring-cloud-svc-uat
+
+- name: manual-deploy-to-prod
+  serial: true
+  plan:
+  - aggregate:
+    - get: sample-spring-cloud-svc-release
+      passed: [promote-to-uat]
+    - get: sample-spring-cloud-svc-repo
+      passed: [promote-to-uat]
+  - task: deploy-to-prod
+    file: sample-spring-cloud-svc-repo/ci/tasks/cf-deployment.yml
+    params:
+      API_ENDPOINT: api.10.65.192.249.xip.io
+      USERNAME: admin
+      PASSWORD: admin
+      ORG: test-org
+      SPACE: prod
+      HOST: sample-spring-cloud-svc
