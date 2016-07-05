@@ -88,6 +88,6 @@ You'll need to rename this to something that isn't taken and update [pipeline.ym
     fly -t demo set-pipeline -p pipeline sample-spring-cloud-svc-ci-pipeline \
       -c ci/pipeline.yml \
       -v "git-private-key=$(cat ~/.ssh/concourse_demo_git)" \
-      -v S3-access-key-id={YOUR_S3_ACCESS_KEY_ID} \
-      -v S3-secret-access-key={YOUR_S3_SECRET_ACCESS_KEY}
+      -v s3-access-key-id={REPLACE_WITH_YOUR_S3_ACCESS_KEY_ID} \
+      -v s3-secret-access-key={REPLACE_WITH_YOUR_S3_SECRET_ACCESS_KEY}
     ```
