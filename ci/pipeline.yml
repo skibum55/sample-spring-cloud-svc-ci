@@ -116,7 +116,7 @@ jobs:
         path: /bin/bash
         args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/cats.sh"]
       params:
-        URL: http://{{host-test}}
+        URL: {{test-url}}
 
 - name: promote-to-uat
   plan:
