@@ -38,10 +38,13 @@ apply plugin: 'spring-boot'
 apply plugin: 'cf-push'
 apply from: file('gradle/coverage.gradle')
 
+version = '1.0'
+
 jar {
-	baseName = 'sample-spring-cloud-svc-ci'
-	version = '1.0.0-SNAPSHOT'
+	baseName = 'sample-spring-cloud-svc'
+	version = "${version}" // see gradle.properties
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
