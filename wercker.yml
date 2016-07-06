@@ -21,7 +21,8 @@ build:
         code: |
           ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
 
-create-release:
+set-version:
+  box: google/golang
   steps:
     - script:
         name: create next version
@@ -30,6 +31,8 @@ create-release:
           export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
           export APP_VERSION=$(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6)
 
+create-release:
+  steps:
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
