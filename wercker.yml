@@ -29,6 +29,11 @@ build:
 deploy:
   box: google/golang
   steps:
+    - script:
+        name: update and install wget
+        code: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
         user_name: $CF_USER
