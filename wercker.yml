@@ -26,17 +26,14 @@ set-version:
         code: |
           go get github.com/xchapter7x/versioning
           export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
-          export APP_VERSION=$(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6)
+          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/.release_tag)
 
 create-release:
   steps:
-    - github-create-release:
-        token: $GITHUB_TOKEN
-        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
-
     - script:
         name: run gradle assemble
         code: |
+          APP_VERSION=$(cat $WERCKER_OUTPUT_DIR/.release_tag)
           ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
           export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
 
