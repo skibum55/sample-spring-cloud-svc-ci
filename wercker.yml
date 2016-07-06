@@ -5,7 +5,7 @@ box: java
 dev:
   steps:
     - script:
-      name: run gradle
+      name: run gradle bootRun
       code: |
         ./gradlew bootRun
 
@@ -13,8 +13,73 @@ dev:
 build:
   # The steps that will be executed on build
   steps:
-    # A step that executes `gradle build` command
     - script:
-        name: run gradle
+        name: show base information
+        code: |
+          gradle -v
+    - script:
+        name: run gradle build
         code: |
           ./gradlew --full-stacktrace -q --project-cache-dir=$WERCKER_CACHE_DIR build
+
+deploy:
+    steps:
+      # Execute the s3sync deploy step, a step provided by wercker
+      # - s3sync:
+      #     key_id: $AWS_ACCESS_KEY_ID
+      #     key_secret: $AWS_SECRET_ACCESS_KEY
+      #     bucket_url: $AWS_BUCKET_URL
+      #     source_dir: build/
+      #
+      # - script:
+      #     name: get version from gradle
+      #     code: export APP_VERSION=$(gradle version)
+      # - github-create-release:
+      #     token: $GITHUB_TOKEN
+      #     tag: $APP_VERSION
+      - script:
+          name: assemble
+          code: |
+            ./gradlew --full-stacktrace -q --project-cache-dir=$WERCKER_CACHE_DIR assemble
+
+      - script:
+          name: show build information
+          code: |
+            ls -la build/libs/
+
+      - xchapter7x/cf-push-zdd:
+          num_instances: $CF_INSTANCES
+          user_name: $CF_USER
+          user_pass: $CF_PASS
+          org: $CF_ORG
+          space: $CF_SPACE
+          api_url: $CF_APIURL
+          app_name: $CF_APPNAME
+          use_manifest: true
+          manifest: $CF_MANIFEST_FILE_PATH
+
+      - xchapter7x/flowy-release:
+          action: "tag-only-release"
+          tag_variable_name: "VERSION_TAG"
+          active: $GITFLOW_ACTIVE
+          git_name: $GITFLOW_NAME
+          git_email: $GITFLOW_EMAIL
+
+      - script:
+          name: set release id variable and version.txt file
+          code: |
+            git fetch --tags
+            export WERCKER_GITHUB_CREATE_RELEASE_ID=`git log -n1 --pretty=format:%d HEAD | sed s/\ //g | awk -F',' '{print $2}'`
+            echo $WERCKER_GITHUB_CREATE_RELEASE_ID > version.txt
+
+      - github-create-release:
+          token: $GITHUB_TOKEN
+          tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+          # title: Admin Portal $WERCKER_GITHUB_CREATE_RELEASE_ID
+          # draft: $RELEASE_DRAFT
+      #
+      # - github-upload-asset:
+      #     token: $GITHUB_TOKEN
+      #     file: adminportal.tgz
+      #     release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+      #     content-type: application/x-gzip
