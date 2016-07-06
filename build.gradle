@@ -41,7 +41,7 @@ apply from: file('gradle/coverage.gradle')
 // version = '1.0'
 
 jar {
-	baseName = 'sample-spring-cloud-svc'
+	baseName = 'sample-spring-cloud-svc-ci'
 	version = "${version}" // see gradle.properties
 }
 
