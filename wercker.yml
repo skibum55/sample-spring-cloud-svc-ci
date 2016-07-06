@@ -28,12 +28,24 @@ set-version:
           export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
           $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/.release_tag)
 
+    - koding/s3put@0.0.4:
+        key-id:     $AWS_ACCESS_KEY_ID
+        key-secret: $AWS_SECRET_ACCESS_KEY
+        file:       $WERCKER_OUTPUT_DIR/.release_tag
+        url:        s3://sample-spring-cloud-svc-pipeline-artifacts.s3.amazonaws.com/current-version
+
 create-release:
   steps:
+    - mannau/s3get@1.0.1:
+        key-id: $AWS_ACCESS_KEY_ID
+        key-secret: $AWS_SECRET_ACCESS_KEY
+        bucket-url: s3://sample-spring-cloud-svc-pipeline-artifacts.s3.amazonaws.com
+        source-dir: .
+
     - script:
         name: run gradle assemble
         code: |
-          APP_VERSION=$(cat $WERCKER_OUTPUT_DIR/.release_tag)
+          APP_VERSION=$(cat current-version)
           ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
           export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
 
