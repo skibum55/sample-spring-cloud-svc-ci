@@ -1,5 +1,5 @@
 # docker box definition
-box: niaquinto/gradle
+box: java
 
 # defining the dev pipeline
 dev:
@@ -7,7 +7,7 @@ dev:
     - script:
       name: run gradle bootRun
       code: |
-        gradle bootRun
+        ./gradlew bootRun
 
 # Build definition
 build:
@@ -16,11 +16,11 @@ build:
     - script:
         name: show base information
         code: |
-          gradle -v
+          ./gradlew -v
     - script:
         name: run gradle build
         code: |
-          gradle --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
 
 deploy:
     steps:
@@ -40,7 +40,7 @@ deploy:
       - script:
           name: assemble
           code: |
-            gradle --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
+            ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
 
       - script:
           name: install golang
@@ -48,7 +48,7 @@ deploy:
             sudo add-apt-repository ppa:ubuntu-lxc/lxd-stable
             sudo apt-get update -y
             sudo apt-get install golang -y
-            
+
       - xchapter7x/cf-push-zdd:
           num_instances: $CF_INSTANCES
           user_name: $CF_USER
