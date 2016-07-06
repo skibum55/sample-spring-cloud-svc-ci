@@ -2,5 +2,3 @@
 applications:
 - name: sample-spring-cloud-svc
   memory: 512M
-  # random-route: true
-  path: build/libs/sample-spring-cloud-svc.jar
