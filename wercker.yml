@@ -16,7 +16,7 @@ build:
     - script:
         name: show base information
         code: |
-          gradle -v
+          ./gradlew -v
     - script:
         name: run gradle build
         code: |
