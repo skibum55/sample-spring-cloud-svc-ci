@@ -38,7 +38,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'cf-push'
 apply from: file('gradle/coverage.gradle')
 
-version = '1.0'
+// version = '1.0'
 
 jar {
 	baseName = 'sample-spring-cloud-svc'
