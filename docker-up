@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+docker-machine create sample-spring-cloud-svc --driver virtualbox --virtualbox-memory "11000" --virtualbox-disk-size "100000"
+eval "$(docker-machine env sample-spring-cloud-svc)"

@@ -1,0 +1,3 @@
+rm -fR _builds _steps _projects
+wercker --verbose build --git-domain github.com --git-owner malston --git-repository sample-spring-cloud-svc
+rm -fR _builds _steps _projects
