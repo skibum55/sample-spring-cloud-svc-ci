@@ -22,6 +22,12 @@ set-version:
   box: google/golang
   steps:
     - script:
+        name: update and install wget
+        code: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+
+    - script:
         name: create next version
         code: |
           go get github.com/xchapter7x/versioning
@@ -60,6 +66,7 @@ deploy:
         name: update and install wget
         code: |
           sudo apt-get update -y
+          sudo apt-get install -y wget
 
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
