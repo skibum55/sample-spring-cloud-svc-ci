@@ -20,7 +20,7 @@ build:
     - script:
         name: run gradle build
         code: |
-          ./gradlew --full-stacktrace -q --project-cache-dir=$WERCKER_CACHE_DIR build
+          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
 
 deploy:
     steps:
@@ -40,12 +40,7 @@ deploy:
       - script:
           name: assemble
           code: |
-            ./gradlew --full-stacktrace -q --project-cache-dir=$WERCKER_CACHE_DIR assemble
-
-      - script:
-          name: show build information
-          code: |
-            ls -la build/libs/
+            ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
 
       - xchapter7x/cf-push-zdd:
           num_instances: $CF_INSTANCES
