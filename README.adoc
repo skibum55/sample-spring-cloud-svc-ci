@@ -1,3 +1,10 @@
+== Pipelines
+
+Switch to one of the following branches to checkout the respective pipeline:
+* [concourse](https://github.com/pivotalservices/sample-spring-cloud-svc-ci)
+* [jenkins](https://github.com/pivotalservices/sample-spring-cloud-svc-ci/tree/jenkins)
+* [wercker](https://github.com/pivotalservices/sample-spring-cloud-svc-ci/tree/wercker)
+
 == Running Locally
 
 * Start up the Service using the following command
@@ -36,4 +43,3 @@ the console
  ----
  wget http://dockerip:8080/jnlpJars/jenkins-cli.jar
  ----
-
