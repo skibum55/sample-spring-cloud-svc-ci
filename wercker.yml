@@ -45,7 +45,6 @@ deploy:
       - script:
           name: install golang
           code: |
-            sudo add-apt-repository ppa:gophers/go -y
             sudo apt-get update -y
             sudo apt-get install golang-stable -y
 
