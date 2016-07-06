@@ -45,9 +45,10 @@ deploy:
       - script:
           name: install golang
           code: |
+            sudo apt-get install -y software-properties-common
             sudo add-apt-repository ppa:ubuntu-lxc/lxd-stable
             sudo apt-get update -y
-            sudo apt-get install golang -y
+            sudo apt-get install -y golang
 
       - xchapter7x/cf-push-zdd:
           num_instances: $CF_INSTANCES
