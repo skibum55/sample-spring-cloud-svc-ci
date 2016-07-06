@@ -1,5 +1,5 @@
 # docker box definition
-box: java
+box: niaquinto/gradle
 
 # defining the dev pipeline
 dev:
@@ -7,7 +7,7 @@ dev:
     - script:
       name: run gradle bootRun
       code: |
-        ./gradlew bootRun
+        gradle bootRun
 
 # Build definition
 build:
@@ -16,11 +16,11 @@ build:
     - script:
         name: show base information
         code: |
-          ./gradlew -v
+          gradle -v
     - script:
         name: run gradle build
         code: |
-          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+          gradle --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
 
 deploy:
     steps:
@@ -40,7 +40,7 @@ deploy:
       - script:
           name: assemble
           code: |
-            ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
+            gradle --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
 
       - script:
           name: install golang
