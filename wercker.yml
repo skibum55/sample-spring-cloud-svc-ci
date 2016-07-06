@@ -1,7 +1,7 @@
 # docker box definition
 box: java
 
-# defining the dev pipeline
+# dev pipeline
 dev:
   steps:
     - script:
@@ -9,9 +9,8 @@ dev:
       code: |
         ./gradlew bootRun
 
-# Build definition
+# build pipeline
 build:
-  # The steps that will be executed on build
   steps:
     - script:
         name: show base information
@@ -21,11 +20,31 @@ build:
         name: run gradle build
         code: |
           ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+
+create-release:
+  steps:
+    - script:
+        name: set release id variable for version
+        code: |
+          go get github.com/xchapter7x/versioning
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
+          export APP_VERSION=$(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6)
+
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+
     - script:
         name: run gradle assemble
         code: |
-          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
+          ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
+          export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
 
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: $CF_PATH
+
+# deploy pipeline
 deploy:
   box: google/golang
   steps:
@@ -45,21 +64,7 @@ deploy:
         app_name: $CF_APPNAME
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
-
-    - s3sync:
-        key_id: $AWS_ACCESS_KEY_ID
-        key_secret: $AWS_SECRET_ACCESS_KEY
-        bucket_url: $AWS_BUCKET_URL
-        source_dir: build/
-
-    - script:
-        name: get version
-        code: |
-          export APP_VERSION=$(cat build/current-version)
-
-    - github-create-release:
-        token: $GITHUB_TOKEN
-        tag: $APP_VERSION
+        path: $CF_PATH
         # title: Admin Portal $WERCKER_GITHUB_CREATE_RELEASE_ID
         # draft: $RELEASE_DRAFT
     #
