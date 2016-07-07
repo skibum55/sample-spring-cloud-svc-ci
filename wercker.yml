@@ -7,67 +7,56 @@ dev:
       code: |
         ./gradlew bootRun
 
-build:
-  steps:
-    - script:
-        name: show base information
-        code: |
-          ./gradlew -v
-    - script:
-        name: run gradle build
-        code: |
-          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
-
-set-version:
+create-version:
   box: google/golang
   steps:
     - script:
-        name: update and install wget
+        name: install packages
         code: |
           sudo apt-get update -y
           sudo apt-get install -y wget
-
     - script:
-        name: create next version
+        name: bump version
         code: |
           go get github.com/xchapter7x/versioning
           export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
-          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/.release_tag)
-
-    - koding/s3put@0.0.4:
-        key-id:     $AWS_ACCESS_KEY_ID
-        key-secret: $AWS_SECRET_ACCESS_KEY
-        file:       $WERCKER_OUTPUT_DIR/.release_tag
-        url:        s3://sample-spring-cloud-svc-pipeline-artifacts.s3.amazonaws.com/current-version
-
-create-release:
-  steps:
-    - mannau/s3get@1.0.1:
-        key-id: $AWS_ACCESS_KEY_ID
-        key-secret: $AWS_SECRET_ACCESS_KEY
-        bucket-url: s3://sample-spring-cloud-svc-pipeline-artifacts.s3.amazonaws.com
-        source-dir: .
-
+          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
     - script:
-        name: run gradle assemble
+        name: save output
         code: |
-          APP_VERSION=$(cat current-version)
-          ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR assemble
-          export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
+          cp -R ./ ${WERCKER_OUTPUT_DIR}
 
-    - github-upload-asset:
-        token: $GITHUB_TOKEN
-        file: $CF_PATH
+build:
+  steps:
+    - script:
+        name: get version
+        code: |
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
+          echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
+    - script:
+        name: run gradle build
+        code: |
+          ./gradlew -Pversion=$WERCKER_GITHUB_CREATE_RELEASE_ID --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+    - script:
+        name: save output
+        code: |
+          cp -R ./ ${WERCKER_OUTPUT_DIR}
 
 deploy:
   box: google/golang
   steps:
     - script:
-        name: update and install wget
+        name: install packages
         code: |
           sudo apt-get update -y
-          sudo apt-get install -y wget
-
+          sudo apt-get install -y ssh wget
+    - script:
+        name: set cf path
+        code: |
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
+          echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
+          export APP_VERSION=$WERCKER_GITHUB_CREATE_RELEASE_ID
+          export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
         user_name: $CF_USER
@@ -79,3 +68,17 @@ deploy:
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
         path: $CF_PATH
+    - wercker/add-ssh-key@1.0.2:
+        keyname: GITHUB_SSH_KEY
+    - add-to-known_hosts:
+        hostname: github.com
+        fingerprint: d6:df:f4:49:1a:41:fd:02:55:19:52:0a:b0:a3:46:b6
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        title: Sample Spring Cloud Service $WERCKER_GITHUB_CREATE_RELEASE_ID
+        draft: $RELEASE_DRAFT
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: $CF_PATH
+        content-type: application/x-gzip
