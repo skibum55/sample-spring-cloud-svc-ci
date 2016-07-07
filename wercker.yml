@@ -13,7 +13,7 @@ test:
         keyname: GITHUB_SSH_KEY
     - add-to-known_hosts:
         hostname: github.com
-        fingerprint: ad:dc:98:7c:3f:35:52:bc:2f:87:a4:c1:bc:6a:19:63
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
     - script:
         name: run gradle test
         code: |
@@ -52,7 +52,7 @@ build:
         keyname: GITHUB_SSH_KEY
     - add-to-known_hosts:
         hostname: github.com
-        fingerprint: ad:dc:98:7c:3f:35:52:bc:2f:87:a4:c1:bc:6a:19:63
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
     - script:
         name: run gradle release tag
         code: |
@@ -107,7 +107,7 @@ deploy:
         keyname: GITHUB_SSH_KEY
     - add-to-known_hosts:
         hostname: github.com
-        fingerprint: ad:dc:98:7c:3f:35:52:bc:2f:87:a4:c1:bc:6a:19:63
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
