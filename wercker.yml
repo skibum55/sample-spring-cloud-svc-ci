@@ -31,6 +31,7 @@ create-version:
         code: |
           go get github.com/xchapter7x/versioning
           ls -al
+          git tag -l
           git branch
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(versioning bump_patch)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID = $WERCKER_GITHUB_CREATE_RELEASE_ID"
