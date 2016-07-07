@@ -58,12 +58,12 @@ build:
           pwd
           ls -al
           git branch
-          git tag -l
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(./gradlew -q printVersion)
           $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
           echo "WERCKER_OUTPUT_DIR = $WERCKER_OUTPUT_DIR"
           ls -al $WERCKER_OUTPUT_DIR/
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
+          git tag -l
     - script:
         name: run gradle build
         code: |
