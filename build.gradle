@@ -67,6 +67,17 @@ dependencyManagement {
 	}
 }
 
+project.version.with {
+    startingVersion = "1.0.0"
+		autobump {
+			majorPattern =~ /^\[bump-major\]$/
+			minorPattern =~ /^\[bump-minor\]$/
+			patchPattern =~ /^\[bump-patch\]$/
+			preReleasePattern =~ /^\[bump-pre-release\]$/
+			promoteToReleasePattern =~ /^\[promote-to-release\]$/
+		}
+}
+
 cfConfig {
     name = "sample-spring-cloud-svc-ci"
     hostName = "sample-spring-cloud-svc-ci"
