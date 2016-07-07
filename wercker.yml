@@ -89,13 +89,15 @@ deploy:
         token: $GITHUB_TOKEN
         file: $CF_PATH
         content-type: application/x-gzip
-smoke-tests:
+
+smoke-test:
   steps:
     - script:
       name: run gradle bootRun
       code: |
         ./mvnw test -P smoke -Durl=${APP_URL}/message
-acceptance-tests:
+
+acceptance-test:
   steps:
     - script:
       name: run gradle cfAcceptanceTest
