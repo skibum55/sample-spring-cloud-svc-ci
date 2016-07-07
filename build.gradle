@@ -86,7 +86,7 @@ cfConfig {
 
 task cfAcceptanceTest(type: Test, dependsOn: "cf-get-app-detail")  {
 	doFirst() {
-		systemProperty "url", "https://${project.cfConfig.applicationDetail.urls[0]}"
+		systemProperty "url", "http://${project.cfConfig.applicationDetail.urls[0]}/message"
 	}
 	useJUnit {
 		includeCategories 'org.bk.producer.test.AcceptanceTest'

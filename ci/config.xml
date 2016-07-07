@@ -11,11 +11,11 @@
           <description></description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
+        <hudson.model.PasswordParameterDefinition>
           <name>cf_password</name>
           <description></description>
           <defaultValue></defaultValue>
-        </hudson.model.StringParameterDefinition>
+        </hudson.model.PasswordParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -24,12 +24,12 @@
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>https://github.com/malston/sample-spring-cloud-svc-ci</url>
+          <url>https://github.com/pivotalservices/sample-spring-cloud-svc-ci</url>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>*/Jenkinsfile</name>
+          <name>*/jenkins</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
