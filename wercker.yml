@@ -43,11 +43,11 @@ test:
 
 build:
   steps:
-    - wercker/add-ssh-key@1.0.2:
-        keyname: GITHUB_SSH_KEY
-    - add-to-known_hosts:
-        hostname: github.com
-        fingerprint: 61:ea:15:12:08:34:23:0a:2e:1c:5f:18:55:39:d3:70
+    # - wercker/add-ssh-key@1.0.2:
+    #     keyname: GITHUB_SSH_KEY
+    # - add-to-known_hosts:
+    #     hostname: github.com
+    #     fingerprint: 61:ea:15:12:08:34:23:0a:2e:1c:5f:18:55:39:d3:70
     - script:
         name: run gradle release tag
         code: |
