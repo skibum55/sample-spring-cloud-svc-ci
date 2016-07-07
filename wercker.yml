@@ -7,6 +7,13 @@ dev:
       code: |
         ./gradlew bootRun
 
+test:
+  steps:
+    -script:
+      name: run gradle test
+      code: |
+        ./gradlew -Pversion=$WERCKER_GITHUB_CREATE_RELEASE_ID --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR test
+
 create-version:
   box: google/golang
   steps:
