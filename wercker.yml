@@ -30,6 +30,7 @@ create-version:
         name: bump version
         code: |
           ls -al
+          git branch
           git tag -l
           go get github.com/xchapter7x/versioning
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(versioning bump_patch)
@@ -47,6 +48,8 @@ build:
         code: |
           pwd
           ls -al
+          git branch
+          git tag -l
           echo "WERCKER_OUTPUT_DIR = $WERCKER_OUTPUT_DIR"
           ls -al $WERCKER_OUTPUT_DIR/
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
