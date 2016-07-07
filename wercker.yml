@@ -27,7 +27,9 @@ create-version:
         code: |
           go get github.com/xchapter7x/versioning
           export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
+          echo "WERCKER_GITHUB_CREATE_RELEASE_ID = $WERCKER_GITHUB_CREATE_RELEASE_ID"
           $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
+          echo $(cat $WERCKER_OUTPUT_DIR/version)
     - script:
         name: save output
         code: |
