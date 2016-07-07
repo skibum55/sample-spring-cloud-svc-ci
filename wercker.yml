@@ -51,7 +51,7 @@ build:
     - script:
         name: run gradle release tag
         code: |
-          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR ./gradlew release tag
+          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR release tag
     - script:
         name: get version
         code: |
