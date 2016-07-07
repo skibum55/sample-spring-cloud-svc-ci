@@ -18,31 +18,40 @@ test:
         code: |
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
-create-version:
-  box: google/golang
-  steps:
-    - script:
-        name: install packages
-        code: |
-          sudo apt-get update -y
-          sudo apt-get install -y wget
-    - script:
-        name: bump version
-        code: |
-          ls -al
-          git branch
-          git tag -l
-          go get github.com/xchapter7x/versioning
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(versioning bump_patch)
-          echo "WERCKER_GITHUB_CREATE_RELEASE_ID = $WERCKER_GITHUB_CREATE_RELEASE_ID"
-          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
-    - script:
-        name: save output
-        code: |
-          cp -R ./ ${WERCKER_OUTPUT_DIR}
+# create-version:
+#   box: google/golang
+#   steps:
+#     - script:
+#         name: install packages
+#         code: |
+#           sudo apt-get update -y
+#           sudo apt-get install -y wget
+#     - script:
+#         name: bump version
+#         code: |
+#           ls -al
+#           git branch
+#           git tag -l
+#           go get github.com/xchapter7x/versioning
+#           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(versioning bump_patch)
+#           echo "WERCKER_GITHUB_CREATE_RELEASE_ID = $WERCKER_GITHUB_CREATE_RELEASE_ID"
+#           $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
+#     - script:
+#         name: save output
+#         code: |
+#           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
 build:
   steps:
+    - wercker/add-ssh-key@1.0.2:
+        keyname: GITHUB_SSH_KEY
+    - add-to-known_hosts:
+        hostname: github.com
+        fingerprint: 61:ea:15:12:08:34:23:0a:2e:1c:5f:18:55:39:d3:70
+    - script:
+        name: run gradle release tag
+        code: |
+          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR ./gradlew release tag
     - script:
         name: get version
         code: |
@@ -50,9 +59,10 @@ build:
           ls -al
           git branch
           git tag -l
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(./gradlew -q printVersion)
+          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
           echo "WERCKER_OUTPUT_DIR = $WERCKER_OUTPUT_DIR"
           ls -al $WERCKER_OUTPUT_DIR/
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
     - script:
         name: run gradle build
@@ -92,7 +102,7 @@ deploy:
         keyname: GITHUB_SSH_KEY
     - add-to-known_hosts:
         hostname: github.com
-        fingerprint: d6:df:f4:49:1a:41:fd:02:55:19:52:0a:b0:a3:46:b6
+        fingerprint: 61:ea:15:12:08:34:23:0a:2e:1c:5f:18:55:39:d3:70
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
