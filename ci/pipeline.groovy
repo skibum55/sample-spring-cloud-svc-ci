@@ -34,7 +34,7 @@ def runSmokeTests(url, user) {
 
 def runAcceptanceTests(url, user) {
 	stage 'run acceptance tests'
-	sh "./mvnw test -P acceptance -Durl=${url}"
+    sh "./gradlew cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 return this;
