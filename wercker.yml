@@ -3,16 +3,16 @@ box: java
 dev:
   steps:
     - script:
-      name: run gradle bootRun
-      code: |
-        ./gradlew bootRun
+        name: run gradle bootRun
+        code: |
+          ./gradlew bootRun
 
 test:
   steps:
     - script:
-      name: run gradle test
-      code: |
-        ./gradlew -Pversion=$WERCKER_GITHUB_CREATE_RELEASE_ID --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR test
+        name: run gradle test
+        code: |
+          ./gradlew -Pversion=$WERCKER_GITHUB_CREATE_RELEASE_ID --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR test
 
 create-version:
   box: google/golang
@@ -63,7 +63,6 @@ deploy:
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
           export APP_VERSION=$WERCKER_GITHUB_CREATE_RELEASE_ID
-          export CF_PATH=build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
         user_name: $CF_USER
@@ -74,7 +73,7 @@ deploy:
         app_name: $CF_APPNAME
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
-        path: $CF_PATH
+        path: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
     - wercker/add-ssh-key@1.0.2:
         keyname: GITHUB_SSH_KEY
     - add-to-known_hosts:
@@ -87,7 +86,7 @@ deploy:
         draft: $RELEASE_DRAFT
     - github-upload-asset:
         token: $GITHUB_TOKEN
-        file: $CF_PATH
+        file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
         content-type: application/x-gzip
 
 smoke-test:
