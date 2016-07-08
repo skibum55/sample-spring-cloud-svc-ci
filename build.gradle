@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '1.3.5.RELEASE'
-        cfAppVersion = '1.0.0.BUILD-SNAPSHOT'
+    cfAppVersion = '1.0.0.BUILD-SNAPSHOT'
 	}
 	repositories {
 		mavenCentral()
@@ -26,7 +26,6 @@ apply plugin: 'net.vivin.gradle-semantic-build-versioning'
 
 jar {
 	baseName = 'sample-spring-cloud-svc-ci'
-	version = '1.0.0-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -37,9 +36,9 @@ repositories {
 }
 
 test {
-    useJUnit {
-        excludeCategories 'org.bk.producer.test.AcceptanceTest', 'org.bk.producer.test.SmokeTest'
-    }
+	useJUnit {
+	  excludeCategories 'org.bk.producer.test.AcceptanceTest', 'org.bk.producer.test.SmokeTest'
+	}
 }
 
 dependencies {
@@ -68,14 +67,14 @@ dependencyManagement {
 }
 
 project.version.with {
-    startingVersion = "1.0.0"
-		autobump {
-			majorPattern =~ /^\[bump-major\]$/
-			minorPattern =~ /^\[bump-minor\]$/
-			patchPattern =~ /^\[bump-patch\]$/
-			preReleasePattern =~ /^\[bump-pre-release\]$/
-			promoteToReleasePattern =~ /^\[promote-to-release\]$/
-		}
+	startingVersion = "1.0.0"
+	autobump {
+		majorPattern =~ /^\[bump-major\]$/
+		minorPattern =~ /^\[bump-minor\]$/
+		patchPattern =~ /^\[bump-patch\]$/
+		preReleasePattern =~ /^\[bump-pre-release\]$/
+		promoteToReleasePattern =~ /^\[promote-to-release\]$/
+	}
 }
 
 cfConfig {
