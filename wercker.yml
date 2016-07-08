@@ -29,11 +29,6 @@ build:
         code: |
           ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
     - script:
-        name: set version
-        code: |
-          export APP_VERSION=$(./gradlew -q printVersion)
-          $(echo $APP_VERSION | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
-    - script:
         name: save output
         code: |
           cp -R ./ ${WERCKER_OUTPUT_DIR}
