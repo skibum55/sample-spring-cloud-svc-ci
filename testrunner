@@ -1,3 +1,1 @@
-rm -fR _builds _steps _projects
-wercker --verbose build --git-domain github.com --git-owner malston --git-repository sample-spring-cloud-svc-ci
-rm -fR _builds _steps _projects
+wercker --verbose build --git-domain github.com --git-owner pivotalservices --git-repository sample-spring-cloud-svc-ci --wercker-yml wercker_test.yml
