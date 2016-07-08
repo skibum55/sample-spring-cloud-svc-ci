@@ -1,10 +1,10 @@
 def build() {
     stage 'compile'
-    def maven = docker.image("maven:3.3.3-jdk-8")
-    maven.inside {
+//    def maven = docker.image("maven:3.3.3-jdk-8")
+//    maven.inside {
         sh './gradlew build -x test'
         step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
-    }
+//    }
 }
 
 def clean_test() {
