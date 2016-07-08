@@ -1,7 +1,7 @@
 ---
 inherit: manifest.yml
 hosts:
-- sample-spring-cloud-svc-ci
+- sample-spring-cloud-svc-ci-malston
 domains:
 - pezapp.io
 - cfapps.pez.pivotal.io
