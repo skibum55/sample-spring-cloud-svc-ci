@@ -81,4 +81,4 @@ acceptance-test:
     - script:
       name: run acceptance tests
       code: |
-        ./gradlew cfAcceptanceTest -Pcf.ccHost=${CF_API} -Pcf.ccUser=${CF_USER} -Pcf.ccPassword=${CF_PASS} -Pcf.org=${CF_ORG} -Pcf.space=${CF_SPACE} -Pcf.domain=${CF_DOMAIN} -Pcf.hostName=${CF_APP_HOSTNAME}
+        ./gradlew cfAcceptanceTest -Pcf.ccHost=${CF_API} -Pcf.ccUser=${CF_USER} -Pcf.ccPassword=${CF_PASS} -Pcf.org=${CF_ORG} -Pcf.space=${CF_SPACE} -Pcf.domain=${CF_DOMAIN} -Pcf.hostName=${CF_APP_HOSTNAME} -Pcf.name=${CF_APPNAME}
