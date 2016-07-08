@@ -31,6 +31,7 @@ build:
     - script:
         name: save output
         code: |
+          $(echo $APP_VERSION > $WERCKER_OUTPUT_DIR/version)
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
 deploy:
