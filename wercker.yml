@@ -18,51 +18,21 @@ test:
         code: |
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
-# create-version:
-#   box: google/golang
-#   steps:
-#     - script:
-#         name: install packages
-#         code: |
-#           sudo apt-get update -y
-#           sudo apt-get install -y wget
-#     - script:
-#         name: bump version
-#         code: |
-#           ls -al
-#           git branch
-#           git tag -l
-#           go get github.com/xchapter7x/versioning
-#           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(versioning bump_patch)
-#           echo "WERCKER_GITHUB_CREATE_RELEASE_ID = $WERCKER_GITHUB_CREATE_RELEASE_ID"
-#           $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
-#     - script:
-#         name: save output
-#         code: |
-#           cp -R ./ ${WERCKER_OUTPUT_DIR}
-
 build:
   steps:
     - script:
-        name: run gradle release tag
+        name: bump version
         code: |
-          ./gradlew --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR release tag
-    - script:
-        name: get version
-        code: |
-          pwd
-          ls -al
-          git branch
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=$(./gradlew -q printVersion)
-          $(echo $WERCKER_GITHUB_CREATE_RELEASE_ID | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
-          echo "WERCKER_OUTPUT_DIR = $WERCKER_OUTPUT_DIR"
-          ls -al $WERCKER_OUTPUT_DIR/
-          echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
-          git tag -l
+          export APP_VERSION=$(./gradlew -q bumpPatch release printVersion)
     - script:
         name: run gradle build
         code: |
-          ./gradlew -Pversion=$WERCKER_GITHUB_CREATE_RELEASE_ID --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+          ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+    - script:
+        name: set version
+        code: |
+          export APP_VERSION=$(./gradlew -q printVersion)
+          $(echo $APP_VERSION | cut -c2-6 > $WERCKER_OUTPUT_DIR/version)
     - script:
         name: save output
         code: |
@@ -77,7 +47,7 @@ deploy:
           sudo apt-get update -y
           sudo apt-get install -y ssh wget
     - script:
-        name: set version
+        name: get version
         code: |
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
@@ -93,15 +63,15 @@ deploy:
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
         path: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
-    - github-create-release:
-        token: $GITHUB_TOKEN
-        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
-        title: Sample Spring Cloud Service $WERCKER_GITHUB_CREATE_RELEASE_ID
-        draft: $RELEASE_DRAFT
-    - github-upload-asset:
-        token: $GITHUB_TOKEN
-        file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
-        content-type: application/x-gzip
+    # - github-create-release:
+    #     token: $GITHUB_TOKEN
+    #     tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+    #     title: Sample Spring Cloud Service $WERCKER_GITHUB_CREATE_RELEASE_ID
+    #     draft: $RELEASE_DRAFT
+    # - github-upload-asset:
+    #     token: $GITHUB_TOKEN
+    #     file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
+    #     content-type: application/x-gzip
 
 smoke-test:
   steps:
