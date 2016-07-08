@@ -63,15 +63,15 @@ deploy:
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
         path: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
-    # - github-create-release:
-    #     token: $GITHUB_TOKEN
-    #     tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
-    #     title: Sample Spring Cloud Service $WERCKER_GITHUB_CREATE_RELEASE_ID
-    #     draft: $RELEASE_DRAFT
-    # - github-upload-asset:
-    #     token: $GITHUB_TOKEN
-    #     file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
-    #     content-type: application/x-gzip
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        title: Sample Spring Cloud Service $WERCKER_GITHUB_CREATE_RELEASE_ID
+        draft: $RELEASE_DRAFT
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
+        content-type: application/x-gzip
 
 smoke-test:
   steps:
