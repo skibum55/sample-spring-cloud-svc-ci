@@ -48,7 +48,7 @@ deploy:
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
           export APP_VERSION=$WERCKER_GITHUB_CREATE_RELEASE_ID
-          ls -al
+          ls -al build/libs
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
         user_name: $CF_USER
