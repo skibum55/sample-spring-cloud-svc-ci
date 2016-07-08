@@ -8,11 +8,11 @@ def build() {
 
 def clean_test() {
     stage 'test'
-    def maven = docker.image("maven:3.3.3-jdk-8")
-    maven.inside {
+//    def maven = docker.image("maven:3.3.3-jdk-8")
+//    maven.inside {
         sh './gradlew clean test assemble'
         step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
-    }
+//    }
 }
 
 def push(api, user, password, org, space, domain, hostname) {
