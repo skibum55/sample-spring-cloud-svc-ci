@@ -27,7 +27,7 @@ build:
     - script:
         name: run gradle build
         code: |
-          ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build
+          ./gradlew -Pversion=$APP_VERSION --full-stacktrace --project-cache-dir=$WERCKER_CACHE_DIR build release
     - script:
         name: save output
         code: |
