@@ -1,4 +1,4 @@
 ---
 applications:
-- name: sample-spring-cloud-svc
+- name: sample-spring-cloud-svc-ci
   memory: 512M
