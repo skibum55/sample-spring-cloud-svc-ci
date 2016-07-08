@@ -48,6 +48,7 @@ deploy:
           export WERCKER_GITHUB_CREATE_RELEASE_ID=$(cat version)
           echo "WERCKER_GITHUB_CREATE_RELEASE_ID=$WERCKER_GITHUB_CREATE_RELEASE_ID"
           export APP_VERSION=$WERCKER_GITHUB_CREATE_RELEASE_ID
+          ls -al
     - xchapter7x/cf-push-zdd:
         num_instances: $CF_INSTANCES
         user_name: $CF_USER
@@ -58,7 +59,7 @@ deploy:
         app_name: $CF_APPNAME
         use_manifest: true
         manifest: $CF_MANIFEST_FILE_PATH
-        path: build/libs/sample-spring-cloud-svc-ci-$APP_VERSION.jar
+        path: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
@@ -66,19 +67,19 @@ deploy:
         draft: $RELEASE_DRAFT
     - github-upload-asset:
         token: $GITHUB_TOKEN
-        file: build/libs/sample-spring-cloud-svc-ci-$APP_VERSION.jar
+        file: build/libs/sample-spring-cloud-svc-$APP_VERSION.jar
         content-type: application/x-gzip
 
 smoke-test:
   steps:
     - script:
-      name: run gradle bootRun
+      name: run smoke tests
       code: |
         ./mvnw test -P smoke -Durl=${APP_URL}/message
 
 acceptance-test:
   steps:
     - script:
-      name: run gradle cfAcceptanceTest
+      name: run acceptance tests
       code: |
-        ./gradlew cfAcceptanceTest
+        ./gradlew cfAcceptanceTest -Pcf.ccHost=${CF_API} -Pcf.ccUser=${CF_USER} -Pcf.ccPassword=${CF_PASS} -Pcf.org=${CF_ORG} -Pcf.space=${CF_SPACE} -Pcf.domain=${CF_DOMAIN} -Pcf.hostName=${CF_APP_HOSTNAME}
