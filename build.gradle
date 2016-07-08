@@ -93,3 +93,13 @@ task cfAcceptanceTest(type: Test, dependsOn: "cf-get-app-detail")  {
 		excludeCategories 'org.bk.producer.test.SmokeTest'
 	}
 }
+
+task cfSmokeTest(type: Test, dependsOn: "cf-get-app-detail")  {
+	doFirst() {
+		systemProperty "url", "http://${project.cfConfig.applicationDetail.urls[0]}/message"
+	}
+	useJUnit {
+		includeCategories 'org.bk.producer.test.SmokeTest'
+		excludeCategories 'org.bk.producer.test.AcceptanceTest'
+	}
+}

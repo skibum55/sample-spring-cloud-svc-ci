@@ -3,6 +3,7 @@ def build() {
     def maven = docker.image("maven:3.3.3-jdk-8")
     maven.inside {
         sh './gradlew build -x test'
+        step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
     }
 }
 
@@ -12,7 +13,6 @@ def clean_test() {
     maven.inside {
         sh './gradlew clean test assemble'
     }
-    // step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
 }
 
 def push(api, user, password, org, space, domain, hostname) {
@@ -29,7 +29,7 @@ def pushIf(api, user, password, org, space, domain, hostname) {
 
 def runSmokeTests(url, user) {
 	stage 'run smoke tests'
-	sh "./mvnw test -P smoke -Durl=${url}"
+    sh "./gradlew cfSmokeTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runAcceptanceTests(url, user) {
