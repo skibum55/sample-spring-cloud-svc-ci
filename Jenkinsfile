@@ -68,7 +68,7 @@ parallel(
 	}
 )
 
-checkpoint 'deploy-to-prod'
+stage 'deploy-to-prod'
 node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'
