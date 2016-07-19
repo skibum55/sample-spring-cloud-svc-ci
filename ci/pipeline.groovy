@@ -1,5 +1,4 @@
 def build() {
-    stage 'compile'
 //    def maven = docker.image("maven:3.3.3-jdk-8")
 //    maven.inside {
         sh './gradlew --full-stacktrace build -x test'
@@ -7,7 +6,6 @@ def build() {
 }
 
 def clean_test() {
-    stage 'test'
 //    def maven = docker.image("maven:3.3.3-jdk-8")
 //    maven.inside {
         sh './gradlew --full-stacktrace clean test assemble'
@@ -16,24 +14,20 @@ def clean_test() {
 }
 
 def push(api, user, password, org, space, domain, hostname) {
-    stage 'cf push'
     sh "ls -la"
     sh "./gradlew --full-stacktrace cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def pushIf(api, user, password, org, space, domain, hostname) {
-//    stage "cf push if acceptable"
     input "Deploy to ${org} ${space}?"
     sh "./gradlew --full-stacktrace cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runSmokeTests(url, user) {
-//	stage 'run smoke tests'
     sh "./gradlew --full-stacktrace cfSmokeTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runAcceptanceTests(url, user) {
-//	stage 'run acceptance tests'
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 
 }
