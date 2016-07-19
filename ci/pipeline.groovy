@@ -29,7 +29,6 @@ def runSmokeTests(api, user, password, org, space, domain, hostname) {
 
 def runAcceptanceTests(api, user, password, org, space, domain, hostname) {
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
-
 }
 
 return this;

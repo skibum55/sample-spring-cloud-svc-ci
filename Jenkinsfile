@@ -31,14 +31,14 @@ parallel(
 		node {
 			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 			flow = load 'ci/pipeline.groovy'
-			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+			flow.runSmokeTests('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 		}
 	},
 	acceptanceTests: {
 		node {
 			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 			flow = load 'ci/pipeline.groovy'
-			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+			flow.runAcceptanceTests('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 		}
 	}
 )
@@ -54,14 +54,14 @@ parallel(
 //		node {
 //			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 //			flow = load 'ci/pipeline.groovy'
-//			flow.runSmokeTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
+//			flow.runSmokeTests('api.run.pez.pivotal.io', user)
 //		}
 //	},
 //	acceptanceTests: {
 //		node {
 //			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 //			flow = load 'ci/pipeline.groovy'
-//			flow.runAcceptanceTests('https://sample-spring-cloud-svc-ci-dev.cfapps.pez.pivotal.io/message', user)
+//			flow.runAcceptanceTests('api.run.pez.pivotal.io', user)
 //		}
 //	}
 //)
