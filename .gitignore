@@ -13,4 +13,7 @@ out/
 *.iws
 *.iml
 
+.wercker/
+
 credentials.yml
+myenv
