@@ -31,4 +31,8 @@ def runAcceptanceTests(api, user, password, org, space, domain, hostname) {
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
+def sonar(url) {
+    sh "./gradlew sonarqube -Dsonar.host.url=${url} -Dsonar.verbose=true"
+}
+
 return this;

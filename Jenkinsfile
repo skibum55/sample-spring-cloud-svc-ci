@@ -1,6 +1,7 @@
 def user = "pivotalservices"
 def cfUser = "${cf_username}"
 def cfPassword = "${cf_password}"
+def sonarUrl = "${sonar_url}"
 // def registry = "localhost:5000"
 def flow
 
@@ -42,6 +43,11 @@ parallel(
 		}
 	}
 )
+
+stage 'publish-sonar-results'
+node {
+	flow.sonar(sonarUrl)
+}
 
 stage 'deploy-to-test'
 node {
