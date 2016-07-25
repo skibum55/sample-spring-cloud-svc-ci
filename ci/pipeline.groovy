@@ -10,7 +10,7 @@ def clean_test() {
 //    maven.inside {
         sh './gradlew --full-stacktrace clean test assemble'
         step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
-        dir('build/libs') {stash name: 'jar', includes: 'sample-spring-cloud-svc-ci-1.0.0-SNAPSHOT.jar'}
+        // dir('build/libs') {stash name: 'jar', includes: 'sample-spring-cloud-svc-ci-1.0.0-SNAPSHOT.jar'}
         try {
             sh './gradlew upload'
         } catch (Error _) {
@@ -38,12 +38,12 @@ def pushIf(api, user, password, org, space, domain, hostname) {
 }
 
 def runSmokeTests(api, user, password, org, space, domain, hostname) {
-    dir('build/libs') {unstash name:'jar'}
+    // dir('build/libs') {unstash name:'jar'}
     sh "./gradlew --full-stacktrace cfSmokeTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runAcceptanceTests(api, user, password, org, space, domain, hostname) {
-    dir('build/libs') {unstash name:'jar'}
+    // dir('build/libs') {unstash name:'jar'}
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
