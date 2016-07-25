@@ -28,24 +28,22 @@ def sonar(url) {
 }
 
 def push(api, user, password, org, space, domain, hostname) {
-    unstash name:'jars'
     sh "ls -la"
     sh "./gradlew --full-stacktrace cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def pushIf(api, user, password, org, space, domain, hostname) {
     input "Deploy to ${org} ${space}?"
-    unstash name:'jars'
     sh "./gradlew --full-stacktrace cf-push -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runSmokeTests(api, user, password, org, space, domain, hostname) {
-    unstash name:'jars'
+    // dir('build/libs') {unstash name:'jars'}
     sh "./gradlew --full-stacktrace cfSmokeTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
 def runAcceptanceTests(api, user, password, org, space, domain, hostname) {
-    unstash name:'jars'
+    // dir('build/libs') {unstash name:'jars'}
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
 }
 
