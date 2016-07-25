@@ -1,7 +1,9 @@
 def user = "pivotalservices"
 def cfUser = "${cf_username}"
 def cfPassword = "${cf_password}"
+// def cfOrg = "${cf_org}"
 def sonarUrl = "${sonar_url}"
+def nexusUrl = "${nexus_url}"
 // def registry = "localhost:5000"
 def flow
 
@@ -17,6 +19,11 @@ node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'
 	flow.clean_test()
+}
+
+stage 'publish-sonar-results'
+node {
+	flow.sonar(sonarUrl)
 }
 
 stage 'deploy-to-development'
@@ -44,12 +51,7 @@ parallel(
 	}
 )
 
-stage 'publish-sonar-results'
-node {
-	flow.sonar(sonarUrl)
-}
-
-stage 'deploy-to-test'
+stage name: 'deploy-to-test', concurrency: 1
 node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'
@@ -74,7 +76,14 @@ parallel(
 	}
 )
 
-stage 'deploy-to-prod'
+input message: "Does https://sample-spring-cloud-svc-ci-prod.cfapps.pez.pivotal.io look good?"
+try {
+    checkpoint('Before production')
+} catch (NoSuchMethodError _) {
+    echo 'Checkpoint feature available in CloudBees Jenkins Enterprise.'
+}
+
+stage name: 'deploy-to-prod', concurrency: 1
 node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'

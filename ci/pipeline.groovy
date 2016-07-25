@@ -10,7 +10,21 @@ def clean_test() {
 //    maven.inside {
         sh './gradlew --full-stacktrace clean test assemble'
         step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/TEST-*.xml'])
+        // dir('build/libs') {stash name: 'war', includes: 'sample-spring-cloud-svc-ci-1.0.0-SNAPSHOT.jar'}
+        try {
+            sh './gradlew upload'
+        } catch (Error _) {
+            echo 'Nexus not running -- check docker compose file'
+        }
 //    }
+}
+
+def sonar(url) {
+  try {
+      sh "./gradlew sonarqube -Dsonar.host.url=${url} -Dsonar.verbose=true"
+  } catch (Error _) {
+      echo 'Sonar is not running -- check docker compose file'
+  }
 }
 
 def push(api, user, password, org, space, domain, hostname) {
@@ -29,10 +43,6 @@ def runSmokeTests(api, user, password, org, space, domain, hostname) {
 
 def runAcceptanceTests(api, user, password, org, space, domain, hostname) {
     sh "./gradlew --full-stacktrace cfAcceptanceTest -Pcf.ccHost=${api} -Pcf.ccUser=${user} -Pcf.ccPassword=${password} -Pcf.org=${org} -Pcf.space=${space} -Pcf.domain=${domain} -Pcf.hostName=${hostname}"
-}
-
-def sonar(url) {
-    sh "./gradlew sonarqube -Dsonar.host.url=${url} -Dsonar.verbose=true"
 }
 
 return this;
