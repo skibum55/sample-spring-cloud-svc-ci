@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+echo "Accessing a running or recent build's steps: http://concourse.ci/fly-intercept.html"
+
+USAGE="Usage: bin/intercept <target_name> <step_name>"
+
+if [[ $# < 2 ]]; then
+  echo "Illegal number of parameters"
+  echo $USAGE
+  exit
+fi
+
+fly -t $1 intercept --step $2
+
+#fly -t home intercept -j pcf-installer/lab-ops-manager -b 7 -s deploy-ops-manager
+#fly -t home intercept --check pcf-installer/pcf-installer-spike

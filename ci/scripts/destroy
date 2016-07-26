@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+echo 'Destroy pipeline on a particular target'
+
+USAGE="Usage: bin/destroy target_name pipeline_name"
+
+if [[ $# -ne 2 ]]; then
+  echo "Illegal number of parameters"
+  echo $USAGE
+  exit
+fi
+
+fly -t $1 destroy-pipeline --pipeline $2

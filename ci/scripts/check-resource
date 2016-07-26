@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+echo 'Trigger discovery of new versions'
+
+USAGE="Usage: bin/check-resource <target_name> <pipeline_name> <resource_name> ..."
+
+if [[ $# < 3 ]]; then
+  echo "Illegal number of parameters"
+  echo $USAGE
+  exit
+fi
+
+fly -t $1 check-resource --resource $2/$3 $4 $5

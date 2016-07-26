@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'yaml'
+
+unless ARGV.size == 1
+  puts "Usage: ./json2yaml <json_file>"
+  exit 1
+end
+
+filename = ARGV.first
+
+File.open(filename) do |f|
+  hash = JSON.parse(f.read).to_yaml
+  puts hash
+end
