@@ -1,3 +1,17 @@
+---
+groups:
+- name: commit
+  jobs:
+    - unit
+    - build-binary
+- name: acceptance
+  jobs:
+    - acceptance-tests
+    - promote-to-uat
+- name: release
+  jobs:
+    - manual-deploy-to-prod
+
 resources:
 - name: sample-spring-cloud-svc-repo
   type: git
