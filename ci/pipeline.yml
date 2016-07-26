@@ -2,7 +2,7 @@ resources:
 - name: sample-spring-cloud-svc-repo
   type: git
   source:
-    uri: git@github.com:malston/sample-spring-cloud-svc-ci.git
+    uri: git@github.com:pivotalservices/sample-spring-cloud-svc-ci.git
     branch: concourse
     private_key: {{git-private-key}}
 

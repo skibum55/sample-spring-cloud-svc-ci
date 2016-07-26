@@ -11,7 +11,7 @@
 
 Resources in concourse are implemented as docker images which contain implementations corresponding their types
 
-* sample-spring-cloud-svc-repo ([git-resource](https://github.com/concourse/git-resource)): A Git resource. Tracks the commits in a Git repository (e.g. [sample-spring-cloud-svc-ci](https://github.com/malston/sample-spring-cloud-svc-ci)).
+* sample-spring-cloud-svc-repo ([git-resource](https://github.com/concourse/git-resource)): A Git resource. Tracks the commits in a Git repository (e.g. [sample-spring-cloud-svc-ci](https://github.com/pivotalservices/sample-spring-cloud-svc-ci)).
 
 * sample-spring-cloud-svc-release (([S3-resource](https://github.com/concourse/S3-resource))) A bucket in S3 that stores an artifact (e.g. `build/libs/sample-spring-cloud-svc-ci-1.0.1.jar`). Objects are versioned by pattern-matching filenames to identify version numbers.
 
@@ -24,7 +24,7 @@ Resources in concourse are implemented as docker images which contain implementa
 ### Unit test
 
 This step runs on a container with (gradle or maven) and java installed.
-Basically it just runs "gradle test" against the [sample-spring-cloud-svc-repo](https://github.com/malston/sample-spring-cloud-svc-ci).
+Basically it just runs "gradle test" against the [sample-spring-cloud-svc-repo](https://github.com/pivotalservices/sample-spring-cloud-svc-ci).
 
 ### Build artifact
 
