@@ -3,11 +3,13 @@ groups:
 - name: commit
   jobs:
     - unit
-    - build-binary
+    - build-artifact
 - name: acceptance
   jobs:
-    - acceptance-tests
+    - deploy-to-test
+    - integration
     - promote-to-uat
+
 - name: quality
   jobs:
     - sonar
@@ -58,7 +60,7 @@ jobs:
         path: /bin/bash
         args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/unit.sh"]
 
-- name: build-binary
+- name: build-artifact
   serial: true
   plan:
   - get: sample-spring-cloud-svc-repo
@@ -91,14 +93,14 @@ jobs:
   - put: version
     params: {file: version/number}
 
-- name: acceptance-tests
+- name: deploy-to-test
   plan:
   - aggregate:
     - get: sample-spring-cloud-svc-release
-      passed: [build-binary]
+      passed: [build-artifact]
       trigger: true
     - get: sample-spring-cloud-svc-repo
-      passed: [build-binary]
+      passed: [build-artifact]
       trigger: true
   - task: deploy-to-cats
     config:
@@ -120,6 +122,16 @@ jobs:
         ORG: {{cf-org}}
         SPACE: {{cf-space-test}}
         HOST: {{host-test}}
+
+- name: integration
+  plan:
+  - aggregate:
+    - get: sample-spring-cloud-svc-release
+      passed: [deploy-to-test]
+      trigger: true
+    - get: sample-spring-cloud-svc-repo
+      passed: [deploy-to-test]
+      trigger: true
   - task: cats
     config:
       image_resource:
@@ -139,10 +151,10 @@ jobs:
   plan:
   - aggregate:
     - get: sample-spring-cloud-svc-release
-      passed: [acceptance-tests]
+      passed: [integration]
       trigger: true
     - get: sample-spring-cloud-svc-repo
-      passed: [acceptance-tests]
+      passed: [integration]
       trigger: true
   - task: deploy-to-uat
     config:
@@ -183,7 +195,7 @@ jobs:
         path: /bin/bash
         args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/sonar.sh"]
       params:
-        url: {{sonar-url}}
+        SONAR_URL: {{sonar-url}}
 
 
 - name: manual-deploy-to-prod
