@@ -8,6 +8,9 @@ groups:
   jobs:
     - acceptance-tests
     - promote-to-uat
+- name: quality
+  jobs:
+    - sonar
 - name: release
   jobs:
     - manual-deploy-to-prod
@@ -161,6 +164,26 @@ jobs:
         ORG: {{cf-org}}
         SPACE: {{cf-space-uat}}
         HOST: {{host-uat}}
+
+- name: sonar
+  plan:
+  - get: sample-spring-cloud-svc-repo
+    trigger: true
+  - task: unit
+    config:
+      image_resource:
+        type: docker-image
+        source:
+          repository: java
+      platform: linux
+      inputs:
+        - name: sample-spring-cloud-svc-repo
+      run:
+        path: /bin/bash
+        args: ["-c", "sample-spring-cloud-svc-repo/ci/tasks/sonar.sh"]
+      params:
+        url: {{sonar-url}}
+
 
 - name: manual-deploy-to-prod
   serial: true
