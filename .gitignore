@@ -14,3 +14,5 @@ out/
 *.iml
 
 credentials.yml
+myenv
+.wercker/
