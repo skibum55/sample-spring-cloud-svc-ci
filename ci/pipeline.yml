@@ -168,8 +168,9 @@ jobs:
 - name: sonar
   plan:
   - get: sample-spring-cloud-svc-repo
+    passed: [promote-to-uat]
     trigger: true
-  - task: unit
+  - task: publish-quality-metrics
     config:
       image_resource:
         type: docker-image
